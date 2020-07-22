@@ -160,7 +160,7 @@ The API will return three error types when requests fail:
 - General:
     - Adds a new question to the database if a new book is provided as JSON and returns the book id
     - Searches questions for a keyword and returns results if `searchTerm` is provided as JSON and returns the search results
-- Request Body (Adding a new question):
+- Request Body (Adding a new question):  
     `question`: Question statement  
     `answer`: Answer statement  
     `category`: Category ID  
