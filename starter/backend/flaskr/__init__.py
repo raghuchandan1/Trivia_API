@@ -14,12 +14,12 @@ def create_app(test_config=None):
   setup_db(app)
 
   '''
-  @TODO: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
+  @DONE: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
   '''
   cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
   '''
-  @TODO: Use the after_request decorator to set Access-Control-Allow
+  @DONE: Use the after_request decorator to set Access-Control-Allow
   '''
   @app.after_request
   def after_request(response):
@@ -32,6 +32,15 @@ def create_app(test_config=None):
   for all available categories.
   '''
 
+  def paginate_questions(request, selection):
+    page = request.args.get('page', 1, type=int)
+    start = (page - 1) * QUESTIONS_PER_PAGE
+    end = start + QUESTIONS_PER_PAGE
+
+    questions = [question.format() for question in selection]
+    current_questions = questions[start:end]
+
+    return current_questions
 
   '''
   @TODO: 
