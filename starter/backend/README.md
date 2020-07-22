@@ -66,6 +66,247 @@ One note before you delve into your tasks: for each endpoint you are expected to
 8. Create a POST endpoint to get questions to play the quiz. This endpoint should take category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions. 
 9. Create error handlers for all expected errors including 400, 404, 422 and 500. 
 
+
+## API Reference
+
+### Getting Started
+- Base URL: At present this app can only be run locally and is not hosted as a base URL. The backend app is hosted at the default, `http://127.0.0.1:5000/`, which is set as a proxy in the frontend configuration. 
+- Authentication: This version of the application does not require authentication or API keys. 
+
+### Error Handling
+Errors are returned as JSON objects in the following format:
+```
+{
+    "success": False, 
+    "error": 400,
+    "message": "bad request"
+}
+```
+The API will return three error types when requests fail:
+- 400: Bad Request
+- 404: Resource Not Found
+- 422: Not Processable 
+
+### Endpoints
+#### GET /categories
+- General:
+    - Fetches a dictionary of all available categories with the category id as its key and the category name as value
+- Request Parameters:
+    - None    
+- Sample: `curl http://127.0.0.1:5000/categories`
+
+``` {
+  "categories": {
+    "1": "Science", 
+    "2": "Art", 
+    "3": "Geography", 
+    "4": "History", 
+    "5": "Entertainment", 
+    "6": "Sports"
+  }, 
+  "success": true
+}
+```
+
+#### GET /questions
+- General:
+    - Fetches a paginated dictionary of questions of all available categories
+    - Results are paginated in groups of 10.
+- Request Parameters(Optional):
+    - `page=<int:page_number>    
+- Sample: `curl http://127.0.0.1:5000/questions?page=1`
+
+``` {
+  "categories": {
+    "1": "Science", 
+    "2": "Art", 
+    "3": "Geography", 
+    "4": "History", 
+    "5": "Entertainment", 
+    "6": "Sports"
+  }, 
+  "current_category": null, 
+  "questions": [
+    {
+      "answer": "Mona Lisa", 
+      "category": 2, 
+      "difficulty": 3, 
+      "id": 17, 
+      "question": "La Giaconda is better known as what?"
+    }, 
+    {
+      "answer": "One", 
+      "category": 2, 
+      "difficulty": 4, 
+      "id": 18, 
+      "question": "How many paintings did Van Gogh sell in his lifetime?"
+    }, 
+    {
+      "answer": "Jackson Pollock", 
+      "category": 2, 
+      "difficulty": 2, 
+      "id": 19, 
+      "question": "Which American artist was a pioneer of Abstract Expressionism, and a leading exponent of action painting?"
+    }, 
+    {
+      "answer": "The Liver", 
+      "category": 1, 
+      "difficulty": 4, 
+      "id": 20, 
+      "question": "What is the heaviest organ in the human body?"
+    }, 
+    {
+      "answer": "Alexander Fleming", 
+      "category": 1, 
+      "difficulty": 3, 
+      "id": 21, 
+      "question": "Who discovered penicillin?"
+    }, 
+    {
+      "answer": "Blood", 
+      "category": 1, 
+      "difficulty": 4, 
+      "id": 22, 
+      "question": "Hematology is a branch of medicine involving the study of what?"
+    }, 
+    {
+      "answer": "Scarab", 
+      "category": 4, 
+      "difficulty": 4, 
+      "id": 23, 
+      "question": "Which dung beetle was worshipped by the ancient Egyptians?"
+    }, 
+    {
+      "answer": "Yes", 
+      "category": 5, 
+      "difficulty": 1, 
+      "id": 24, 
+      "question": "Is the new question added?"
+    }, 
+    {
+      "answer": "Yes", 
+      "category": 5, 
+      "difficulty": 1, 
+      "id": 25, 
+      "question": "Working after search?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 19
+}
+```
+
+#### POST /questions
+- General:
+    - Fetches a paginated dictionary of questions of all available categories
+    - Results are paginated in groups of 10.
+- Request Body:
+    - For adding a new book to the database
+        - Request Body:    
+        `question`: Question statement
+        `answer`: Answer statement
+        `category`: Category ID
+        `difficulty`: Difficulty Level
+        - Response Body:
+    
+    `question`: Question object that is created
+```json
+{
+  "question": {
+    "id": 1,
+    "question": "",
+    "answer": "",
+    "category": 1,
+    "difficulty": 1
+  }
+}
+```
+- Sample: `curl http://127.0.0.1:5000/questions?page=1`
+
+``` {
+  "categories": {
+    "1": "Science", 
+    "2": "Art", 
+    "3": "Geography", 
+    "4": "History", 
+    "5": "Entertainment", 
+    "6": "Sports"
+  }, 
+  "current_category": null, 
+  "questions": [
+    {
+      "answer": "Mona Lisa", 
+      "category": 2, 
+      "difficulty": 3, 
+      "id": 17, 
+      "question": "La Giaconda is better known as what?"
+    }, 
+    {
+      "answer": "One", 
+      "category": 2, 
+      "difficulty": 4, 
+      "id": 18, 
+      "question": "How many paintings did Van Gogh sell in his lifetime?"
+    }, 
+    {
+      "answer": "Jackson Pollock", 
+      "category": 2, 
+      "difficulty": 2, 
+      "id": 19, 
+      "question": "Which American artist was a pioneer of Abstract Expressionism, and a leading exponent of action painting?"
+    }, 
+    {
+      "answer": "The Liver", 
+      "category": 1, 
+      "difficulty": 4, 
+      "id": 20, 
+      "question": "What is the heaviest organ in the human body?"
+    }, 
+    {
+      "answer": "Alexander Fleming", 
+      "category": 1, 
+      "difficulty": 3, 
+      "id": 21, 
+      "question": "Who discovered penicillin?"
+    }, 
+    {
+      "answer": "Blood", 
+      "category": 1, 
+      "difficulty": 4, 
+      "id": 22, 
+      "question": "Hematology is a branch of medicine involving the study of what?"
+    }, 
+    {
+      "answer": "Scarab", 
+      "category": 4, 
+      "difficulty": 4, 
+      "id": 23, 
+      "question": "Which dung beetle was worshipped by the ancient Egyptians?"
+    }, 
+    {
+      "answer": "Yes", 
+      "category": 5, 
+      "difficulty": 1, 
+      "id": 24, 
+      "question": "Is the new question added?"
+    }, 
+    {
+      "answer": "Yes", 
+      "category": 5, 
+      "difficulty": 1, 
+      "id": 25, 
+      "question": "Working after search?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 19
+}
+```
+
+
+
+
+
 REVIEW_COMMENT
 ```
 This README is missing documentation of your endpoints. Below is an example for your endpoint to get all categories. Please use it as a reference for creating your documentation and resubmit your code. 
