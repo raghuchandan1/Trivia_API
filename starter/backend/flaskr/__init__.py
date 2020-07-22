@@ -126,7 +126,7 @@ def create_app(test_config=None):
     @app.route("/questions", methods=['POST'])
     def add_question():
         body = request.get_json()
-        if not ('searchTerm' in body):
+        if not ('searchTerm' in body):# //TODO: Change to GET with arguments
             if not ('question' in body and 'answer' in body and 'difficulty' in body and 'category' in body):
                 abort(422)
 
