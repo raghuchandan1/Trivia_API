@@ -192,11 +192,11 @@ def create_app(test_config=None):
 
         try:
             categories = Category.query.order_by(Category.type).all()
-            category_ids=db.session.query(Category.id).distinct()
-            if not(category_id in category_ids):
+            category_ids = db.session.query(Category.id).distinct()
+            if not (category_id in category_ids):
                 questions = Question.query.filter(
                     Question.category == str(category_id)).all()
-                #categories = Category.query.order_by(Category.type).all()
+                # categories = Category.query.order_by(Category.type).all()
                 return jsonify({
                     'success': True,
                     'questions': [question.format() for question in questions],
