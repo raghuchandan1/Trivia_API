@@ -177,7 +177,7 @@ def create_app(test_config=None):
   only question that include that string within their question. 
   Try using the word "title" to start. 
   '''
-    #@app.route('/questions',methods=['POST])
+    # @app.route('/questions',methods=['POST])
     '''
   @DONE: 
   Create a GET endpoint to get questions based on category. 
@@ -203,6 +203,7 @@ def create_app(test_config=None):
             })
         except:
             abort(404)
+
     '''
   @TODO: 
   Create a POST endpoint to get questions to play the quiz. 
@@ -214,7 +215,8 @@ def create_app(test_config=None):
   one question at a time is displayed, the user is allowed to answer
   and shown whether they were correct or not. 
   '''
-    @app.route('/quizzes',methods=['POST'])
+
+    @app.route('/quizzes', methods=['POST'])
     def play_quiz():
         try:
             body = request.get_json()
@@ -247,5 +249,29 @@ def create_app(test_config=None):
   Create error handlers for all expected errors 
   including 404 and 422. 
   '''
+
+    @app.errorhandler(404)
+    def not_found(error):
+        return jsonify({
+            "success": False,
+            "error": 404,
+            "message": "resource not found"
+        }), 404
+
+    @app.errorhandler(422)
+    def unprocessable(error):
+        return jsonify({
+            "success": False,
+            "error": 422,
+            "message": "unprocessable"
+        }), 422
+
+    @app.errorhandler(400)
+    def bad_request(error):
+        return jsonify({
+            "success": False,
+            "error": 400,
+            "message": "bad request"
+        }), 400
 
     return app
