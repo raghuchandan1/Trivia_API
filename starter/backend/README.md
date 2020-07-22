@@ -158,16 +158,20 @@ The API will return three error types when requests fail:
 - General:
     - Adds a new question to the database if a new book is provided as JSON and returns the book id
     - Searches questions for a keyword and returns results if `searchTerm` is provided as JSON and returns the search results
-- Request Body:
-    - For adding a new book to the database
-        `question`: Question statement
-        `answer`: Answer statement
-        `category`: Category ID
-        `difficulty`: Difficulty Level
-        - Sample: `curl http://127.0.0.1:5000/questions -X POST --data '{"question":"Is the new question added?","answer":"Yes","category":1,"difficulty":1}'`
+- Request Body(Adding a new question):
+    `question`: Question statement
+    `answer`: Answer statement
+    `category`: Category ID
+    `difficulty`: Difficulty Level
+- Sample: `curl http://127.0.0.1:5000/questions`
+          `-X POST` 
+          `-d '{"question":"Is the new question added?",
+          `"answer":"Yes",`
+          `"category":1,`
+          `"difficulty":1}'`
         UPDATE!!
-
-```json {
+``` 
+{
 "success": True,
 "created": 23
 }
