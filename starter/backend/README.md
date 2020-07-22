@@ -96,7 +96,7 @@ The API will return three error types when requests fail:
     - None    
 - Sample: `curl http://127.0.0.1:5000/categories`
 
-```json
+```
 {
   "categories": {
     "1": "Science", 
@@ -116,7 +116,7 @@ The API will return three error types when requests fail:
     - Results are paginated in groups of 10
  - Request Parameters(Optional): 
 	- `page=<int:page_number>`     
-- Sample: `curl http://127.0.0.1:5000/questions?page=1`
+- Sample: `curl http://127.0.0.1:5000/questions?page=2`
 
 ```
 {
@@ -161,13 +161,13 @@ The API will return three error types when requests fail:
     - Adds a new question to the database if a new book is provided as JSON and returns the book id
     - Searches questions for a keyword and returns results if `searchTerm` is provided as JSON and returns the search results
 - Request Body (Adding a new question):
-    `question`: Question statement
-    `answer`: Answer statement
-    `category`: Category ID
+    `question`: Question statement  
+    `answer`: Answer statement  
+    `category`: Category ID  
     `difficulty`: Difficulty Level
     
-- Sample: `curl http://127.0.0.1:5000/questions -X POST -d '{"question":"Is 				the new question added?", "answer":"Yes", "category":1, "difficulty":1}`
-        UPDATE!!
+- Sample: `curl http://127.0.0.1:5000/questions -X POST -d '{question: "Is the new question added?", answer: "Yes", difficulty: 1, category: "5"}'`
+        
 ``` 
 {
 "success": True,
@@ -178,13 +178,32 @@ The API will return three error types when requests fail:
    - Request Body (For searching questions):
         `searchTerm`: The keyword to be searched in the questions
         
-    - Sample: `curl http://127.0.0.1:5000/questions -X POST -d '{"searchTerm":"new question"}'`
-        UPDATE!!
+   - Sample: `curl http://127.0.0.1:5000/questions -X POST -d '{searchTerm: "new question"}'`
+        
 ```
 {
-"success": True,
-"created": 20
+  "categories": {
+    "1": "Science", 
+    "2": "Art", 
+    "3": "Geography", 
+    "4": "History", 
+    "5": "Entertainment", 
+    "6": "Sports"
+  }, 
+  "current_category": null, 
+  "questions": [
+    {
+      "answer": "Yes", 
+      "category": 5, 
+      "difficulty": 1, 
+      "id": 20, 
+      "question": "Is the new question added?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 1
 }
+
 ```
 
 #### DELETE /questions/`{int:question_id}`
@@ -192,7 +211,7 @@ The API will return three error types when requests fail:
     - Deletes the question from the database
 - Request Parameters: 
 	- None     
-- Sample: `curl -X DELETE http://127.0.0.1:5000/questions/23`
+- Sample: `curl -X DELETE http://127.0.0.1:5000/questions/20`
 
 ```
 {
@@ -210,6 +229,14 @@ The API will return three error types when requests fail:
 
 ```
 {
+  "categories": {
+    "1": "Science", 
+    "2": "Art", 
+    "3": "Geography", 
+    "4": "History", 
+    "5": "Entertainment", 
+    "6": "Sports"
+  }, 
   "current_category": 1, 
   "questions": [
     {
@@ -226,10 +253,18 @@ The API will return three error types when requests fail:
       "id": 21, 
       "question": "Who discovered penicillin?"
     }, 
+    {
+      "answer": "Blood", 
+      "category": 1, 
+      "difficulty": 4, 
+      "id": 22, 
+      "question": "Hematology is a branch of medicine involving the study of what?"
+    }
   ], 
   "success": true, 
-  "total_questions": 2
+  "total_questions": 3
 }
+
 ```
 
 #### POST /quizzes
@@ -238,20 +273,20 @@ The API will return three error types when requests fail:
 - Request Body: 
 	- `previous_questions`: Array of questions previously asked
 	- `quiz_category`: Dictionary containing category_id:category_type     
-- Sample: `curl -X DELETE http://127.0.0.1:5000/questions/23`
-UPDATE!!!
+- Sample: `curl -X POST http://127.0.0.1:5000/quizzes -d '{previous_questions: [18], quiz_category: {type: "Science", id: "1"}}'`
 
 ```
 {
   "question": {
-    "answer": "The Liver", 
+    "answer": "Alexander Fleming", 
     "category": 1, 
-    "difficulty": 4, 
-    "id": 20, 
-    "question": "What is the heaviest organ in the human body?"
+    "difficulty": 3, 
+    "id": 16, 
+    "question": "Who discovered penicillin?"
   }, 
   "success": true
 }
+
 ```
 
 ## Testing
