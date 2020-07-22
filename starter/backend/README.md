@@ -1,3 +1,4 @@
+
 # Full Stack Trivia API Backend
 
 ## Getting Started
@@ -95,7 +96,8 @@ The API will return three error types when requests fail:
     - None    
 - Sample: `curl http://127.0.0.1:5000/categories`
 
-``` {
+```json
+{
   "categories": {
     "1": "Science", 
     "2": "Art", 
@@ -111,12 +113,13 @@ The API will return three error types when requests fail:
 #### GET /questions
 - General:
     - Fetches a paginated dictionary of questions of all available categories
-    - Results are paginated in groups of 10.
-- Request Parameters(Optional):
-    - `page=<int:page_number>    
+    - Results are paginated in groups of 10
+ - Request Parameters(Optional): 
+	- `page=<int:page_number>`     
 - Sample: `curl http://127.0.0.1:5000/questions?page=1`
 
-``` {
+```
+{
   "categories": {
     "1": "Science", 
     "2": "Art", 
@@ -153,65 +156,103 @@ The API will return three error types when requests fail:
   "total_questions": 19
 }
 ```
-
 #### POST /questions
 - General:
     - Adds a new question to the database if a new book is provided as JSON and returns the book id
     - Searches questions for a keyword and returns results if `searchTerm` is provided as JSON and returns the search results
-- Request Body(Adding a new question):
+- Request Body (Adding a new question):
     `question`: Question statement
     `answer`: Answer statement
     `category`: Category ID
     `difficulty`: Difficulty Level
-- Sample: `curl http://127.0.0.1:5000/questions`
-          `-X POST` 
-          `-d '{"question":"Is the new question added?",
-          `"answer":"Yes",`
-          `"category":1,`
-          `"difficulty":1}'`
+    
+- Sample: `curl http://127.0.0.1:5000/questions -X POST -d '{"question":"Is 				the new question added?", "answer":"Yes", "category":1, "difficulty":1}`
         UPDATE!!
 ``` 
 {
 "success": True,
-"created": 23
+"created": 20
 }
 ```
 
-    - For searching questions based on a keyword
+   - Request Body (For searching questions):
         `searchTerm`: The keyword to be searched in the questions
-        - Sample: `curl http://127.0.0.1:5000/questions -X POST --data '{"searchTerm":"Is the new question added?"}'`
-        UPDATE
-```json {
+        
+    - Sample: `curl http://127.0.0.1:5000/questions -X POST -d '{"searchTerm":"new question"}'`
+        UPDATE!!
+```
+{
 "success": True,
-"created": 23
+"created": 20
 }
 ```
 
-
-
-REVIEW_COMMENT
-```
-This README is missing documentation of your endpoints. Below is an example for your endpoint to get all categories. Please use it as a reference for creating your documentation and resubmit your code. 
-
-Endpoints
-GET '/categories'
-GET ...
-POST ...
-DELETE ...
-
-GET '/categories'
-- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
-- Request Arguments: None
-- Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
-{'1' : "Science",
-'2' : "Art",
-'3' : "Geography",
-'4' : "History",
-'5' : "Entertainment",
-'6' : "Sports"}
+#### DELETE /questions/`{int:question_id}`
+- General:
+    - Deletes the question from the database
+- Request Parameters: 
+	- None     
+- Sample: `curl -X DELETE http://127.0.0.1:5000/questions/23`
 
 ```
+{
+  "deleted": "20", 
+  "success": true
+}
+```
 
+#### GET /categories/`{int:category_id}`/questions
+- General:
+    - Fetches a dictionary of questions for the specified category
+- Request Parameters: 
+	- None     
+- Sample: `curl http://127.0.0.1:5000/categories/1/questions`
+
+```
+{
+  "current_category": 1, 
+  "questions": [
+    {
+      "answer": "The Liver", 
+      "category": 1, 
+      "difficulty": 4, 
+      "id": 20, 
+      "question": "What is the heaviest organ in the human body?"
+    }, 
+    {
+      "answer": "Alexander Fleming", 
+      "category": 1, 
+      "difficulty": 3, 
+      "id": 21, 
+      "question": "Who discovered penicillin?"
+    }, 
+  ], 
+  "success": true, 
+  "total_questions": 2
+}
+```
+
+#### POST /quizzes
+- General:
+    - Fetches one random question within a specified category. Previously asked questions are not asked again.
+- Request Body: 
+	- `previous_questions`: Array of questions previously asked
+	- `quiz_category`: Dictionary containing category_id:category_type     
+- Sample: `curl -X DELETE http://127.0.0.1:5000/questions/23`
+UPDATE!!!
+
+```
+{
+  "question": {
+    "answer": "The Liver", 
+    "category": 1, 
+    "difficulty": 4, 
+    "id": 20, 
+    "question": "What is the heaviest organ in the human body?"
+  }, 
+  "success": true
+}
+```
 
 ## Testing
 To run the tests, run
