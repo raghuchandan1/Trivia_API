@@ -142,7 +142,7 @@ def create_app(test_config=None):
 
                 return jsonify({
                     'success': True,
-                    'created': question.id,
+                    'created': question.id
                 })
 
             except:
