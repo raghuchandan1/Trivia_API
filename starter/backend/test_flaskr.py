@@ -154,8 +154,8 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['total_questions'])
         self.assertTrue(data['current_category'])
 
-    def test_404_get_questions_per_category(self):
-        res = self.client().get('/categories/10000/questions')
+    def test_404_no_category_get_questions_per_category(self):
+        res = self.client().get('/categories/-1/questions')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)

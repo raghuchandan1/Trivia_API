@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import random
 
-from models import setup_db, Question, Category
+from models import setup_db, Question, Category, db
 
 QUESTIONS_PER_PAGE = 10
 
@@ -191,16 +191,20 @@ def create_app(test_config=None):
     def retrieve_questions_by_category(category_id):
 
         try:
-            questions = Question.query.filter(
-                Question.category == str(category_id)).all()
             categories = Category.query.order_by(Category.type).all()
-            return jsonify({
-                'success': True,
-                'questions': [question.format() for question in questions],
-                'total_questions': len(questions),
-                'categories': {category.id: category.type for category in categories},
-                'current_category': category_id
-            })
+            category_ids=db.session.query(Category.id).distinct()
+            if not(category_id in category_ids):
+                questions = Question.query.filter(
+                    Question.category == str(category_id)).all()
+                #categories = Category.query.order_by(Category.type).all()
+                return jsonify({
+                    'success': True,
+                    'questions': [question.format() for question in questions],
+                    'total_questions': len(questions),
+                    'categories': {category.id: category.type for category in categories},
+                    'current_category': category_id
+                })
+            abort(404)
         except:
             abort(404)
 
