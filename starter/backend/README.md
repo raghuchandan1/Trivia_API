@@ -147,48 +147,6 @@ The API will return three error types when requests fail:
       "difficulty": 2, 
       "id": 19, 
       "question": "Which American artist was a pioneer of Abstract Expressionism, and a leading exponent of action painting?"
-    }, 
-    {
-      "answer": "The Liver", 
-      "category": 1, 
-      "difficulty": 4, 
-      "id": 20, 
-      "question": "What is the heaviest organ in the human body?"
-    }, 
-    {
-      "answer": "Alexander Fleming", 
-      "category": 1, 
-      "difficulty": 3, 
-      "id": 21, 
-      "question": "Who discovered penicillin?"
-    }, 
-    {
-      "answer": "Blood", 
-      "category": 1, 
-      "difficulty": 4, 
-      "id": 22, 
-      "question": "Hematology is a branch of medicine involving the study of what?"
-    }, 
-    {
-      "answer": "Scarab", 
-      "category": 4, 
-      "difficulty": 4, 
-      "id": 23, 
-      "question": "Which dung beetle was worshipped by the ancient Egyptians?"
-    }, 
-    {
-      "answer": "Yes", 
-      "category": 5, 
-      "difficulty": 1, 
-      "id": 24, 
-      "question": "Is the new question added?"
-    }, 
-    {
-      "answer": "Yes", 
-      "category": 5, 
-      "difficulty": 1, 
-      "id": 25, 
-      "question": "Working after search?"
     }
   ], 
   "success": true, 
@@ -198,112 +156,32 @@ The API will return three error types when requests fail:
 
 #### POST /questions
 - General:
-    - Fetches a paginated dictionary of questions of all available categories
-    - Results are paginated in groups of 10.
+    - Adds a new question to the database if a new book is provided as JSON and returns the book id
+    - Searches questions for a keyword and returns results if `searchTerm` is provided as JSON and returns the search results
 - Request Body:
     - For adding a new book to the database
-        - Request Body:    
         `question`: Question statement
         `answer`: Answer statement
         `category`: Category ID
         `difficulty`: Difficulty Level
-        - Response Body:
-    
-    `question`: Question object that is created
-```json
-{
-  "question": {
-    "id": 1,
-    "question": "",
-    "answer": "",
-    "category": 1,
-    "difficulty": 1
-  }
-}
-```
-- Sample: `curl http://127.0.0.1:5000/questions?page=1`
+        - Sample: `curl http://127.0.0.1:5000/questions -X POST --data '{"question":"Is the new question added?","answer":"Yes","category":1,"difficulty":1}'`
+        UPDATE!!
 
-``` {
-  "categories": {
-    "1": "Science", 
-    "2": "Art", 
-    "3": "Geography", 
-    "4": "History", 
-    "5": "Entertainment", 
-    "6": "Sports"
-  }, 
-  "current_category": null, 
-  "questions": [
-    {
-      "answer": "Mona Lisa", 
-      "category": 2, 
-      "difficulty": 3, 
-      "id": 17, 
-      "question": "La Giaconda is better known as what?"
-    }, 
-    {
-      "answer": "One", 
-      "category": 2, 
-      "difficulty": 4, 
-      "id": 18, 
-      "question": "How many paintings did Van Gogh sell in his lifetime?"
-    }, 
-    {
-      "answer": "Jackson Pollock", 
-      "category": 2, 
-      "difficulty": 2, 
-      "id": 19, 
-      "question": "Which American artist was a pioneer of Abstract Expressionism, and a leading exponent of action painting?"
-    }, 
-    {
-      "answer": "The Liver", 
-      "category": 1, 
-      "difficulty": 4, 
-      "id": 20, 
-      "question": "What is the heaviest organ in the human body?"
-    }, 
-    {
-      "answer": "Alexander Fleming", 
-      "category": 1, 
-      "difficulty": 3, 
-      "id": 21, 
-      "question": "Who discovered penicillin?"
-    }, 
-    {
-      "answer": "Blood", 
-      "category": 1, 
-      "difficulty": 4, 
-      "id": 22, 
-      "question": "Hematology is a branch of medicine involving the study of what?"
-    }, 
-    {
-      "answer": "Scarab", 
-      "category": 4, 
-      "difficulty": 4, 
-      "id": 23, 
-      "question": "Which dung beetle was worshipped by the ancient Egyptians?"
-    }, 
-    {
-      "answer": "Yes", 
-      "category": 5, 
-      "difficulty": 1, 
-      "id": 24, 
-      "question": "Is the new question added?"
-    }, 
-    {
-      "answer": "Yes", 
-      "category": 5, 
-      "difficulty": 1, 
-      "id": 25, 
-      "question": "Working after search?"
-    }
-  ], 
-  "success": true, 
-  "total_questions": 19
+```json {
+"success": True,
+"created": 23
 }
 ```
 
-
+    - For searching questions based on a keyword
+        `searchTerm`: The keyword to be searched in the questions
+        - Sample: `curl http://127.0.0.1:5000/questions -X POST --data '{"searchTerm":"Is the new question added?"}'`
+        UPDATE
+```json {
+"success": True,
+"created": 23
+}
+```
 
 
 
