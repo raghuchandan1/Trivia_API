@@ -8,46 +8,47 @@ from models import setup_db, Question, Category
 
 QUESTIONS_PER_PAGE = 10
 
-def create_app(test_config=None):
-  # create and configure the app
-  app = Flask(__name__)
-  setup_db(app)
 
-  '''
+def create_app(test_config=None):
+    # create and configure the app
+    app = Flask(__name__)
+    setup_db(app)
+
+    '''
   @DONE: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
   '''
-  cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+    cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-  '''
+    '''
   @DONE: Use the after_request decorator to set Access-Control-Allow
   '''
-  @app.after_request
-  def after_request(response):
-    response.headers.add('Access-Control-Allow-Headers','Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods','GET,POST,PATCH,DELETE,OPTIONS')
-    return response
 
+    @app.after_request
+    def after_request(response):
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,OPTIONS')
+        return response
 
-  '''
+    '''
   @TODO: 
   Create an endpoint to handle GET requests 
   for all available categories.
   '''
 
-  @app.route('/categories')
-  def retrieve_categories():
-    categories = Category.query.order_by(Category.type).all()
-    formatted_categories=[category.format() for category in categories]
-    if len(categories) == 0:
-      abort(404)
+    @app.route('/categories')
+    def retrieve_categories():
+        categories = Category.query.order_by(Category.type).all()
+        formatted_categories = [category.format() for category in categories]
+        if len(categories) == 0:
+            abort(404)
 
-    return jsonify({
-      'success': True,
-      #'categories': {category.id: category.type for category in categories}
-      'categories': formatted_categories
-    })
+        return jsonify({
+            'success': True,
+            # 'categories': {category.id: category.type for category in categories}
+            'categories': formatted_categories
+        })
 
-  '''
+    '''
   @TODO: 
   Create an endpoint to handle GET requests for questions, 
   including pagination (every 10 questions). 
@@ -59,18 +60,39 @@ def create_app(test_config=None):
   ten questions per page and pagination at the bottom of the screen for three pages.
   Clicking on the page numbers should update the questions. 
   '''
-  def paginate_questions(request, selection):
-    page = request.args.get('page', 1, type=int)
-    start = (page - 1) * QUESTIONS_PER_PAGE
-    end = start + QUESTIONS_PER_PAGE
 
-    questions = [question.format() for question in selection]
-    current_questions = questions[start:end]
+    def paginate_questions(request, selection):
+        page = request.args.get('page', 1, type=int)
+        start = (page - 1) * QUESTIONS_PER_PAGE
+        end = start + QUESTIONS_PER_PAGE
 
-    return current_questions
+        questions = [question.format() for question in selection]
+        current_questions = questions[start:end]
 
+        return current_questions
 
-  '''
+    @app.route('/questions')
+    def retrieve_questions():
+        selection = Question.query.order_by(Question.id).all()
+        current_questions = paginate_questions(request, selection)
+
+        # categories = Category.query.order_by(Category.type).all()
+        categories = Category.query.order_by(Category.type).all()
+        formatted_categories = [category.format() for category in categories]
+
+        if len(current_questions) == 0:
+            abort(404)
+
+        return jsonify({
+            'success': True,
+            'questions': current_questions,
+            'total_questions': len(selection),
+            # 'categories': {category.id: category.type for category in categories},
+            'categories': formatted_categories,
+            'current_category': None
+        })
+
+    '''
   @TODO: 
   Create an endpoint to DELETE question using a question ID. 
 
@@ -78,7 +100,7 @@ def create_app(test_config=None):
   This removal will persist in the database and when you refresh the page. 
   '''
 
-  '''
+    '''
   @TODO: 
   Create an endpoint to POST a new question, 
   which will require the question and answer text, 
@@ -89,7 +111,7 @@ def create_app(test_config=None):
   of the questions list in the "List" tab.  
   '''
 
-  '''
+    '''
   @TODO: 
   Create a POST endpoint to get questions based on a search term. 
   It should return any questions for whom the search term 
@@ -100,7 +122,7 @@ def create_app(test_config=None):
   Try using the word "title" to start. 
   '''
 
-  '''
+    '''
   @TODO: 
   Create a GET endpoint to get questions based on category. 
 
@@ -109,8 +131,7 @@ def create_app(test_config=None):
   category to be shown. 
   '''
 
-
-  '''
+    '''
   @TODO: 
   Create a POST endpoint to get questions to play the quiz. 
   This endpoint should take category and previous question parameters 
@@ -122,12 +143,10 @@ def create_app(test_config=None):
   and shown whether they were correct or not. 
   '''
 
-  '''
+    '''
   @TODO: 
   Create error handlers for all expected errors 
   including 404 and 422. 
   '''
-  
-  return app
 
-    
+    return app
