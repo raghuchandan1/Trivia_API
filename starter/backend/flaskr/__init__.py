@@ -36,7 +36,7 @@ def create_app(test_config=None):
   '''
 
     @app.route('/categories')
-    def retrieve_categories():
+    def fetch_categories():
         categories = Category.query.order_by(Category.type).all()
         # formatted_categories = [category.format() for category in categories]
         if len(categories) == 0:
@@ -72,7 +72,7 @@ def create_app(test_config=None):
         return current_questions
 
     @app.route('/questions')
-    def retrieve_questions():
+    def fetch_questions():
         selection = Question.query.order_by(Question.id).all()
         current_questions = paginate_questions(request, selection)
 
@@ -124,7 +124,7 @@ def create_app(test_config=None):
   '''
 
     @app.route("/questions", methods=['POST'])
-    def add_question():
+    def add_search_question():
         body = request.get_json()
         if not ('searchTerm' in body):# //TODO: Change to GET with arguments
             if not ('question' in body and 'answer' in body and 'difficulty' in body and 'category' in body):
@@ -188,7 +188,7 @@ def create_app(test_config=None):
   '''
 
     @app.route('/categories/<int:category_id>/questions', methods=['GET'])
-    def retrieve_questions_by_category(category_id):
+    def fetch_questions_by_category(category_id):
 
         try:
             categories = Category.query.order_by(Category.type).all()
