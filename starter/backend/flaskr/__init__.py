@@ -3,6 +3,7 @@ from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import random
+from random import randint, seed
 
 from models import setup_db, Question, Category, db
 
@@ -125,7 +126,7 @@ def create_app(test_config=None):
     @app.route("/questions", methods=['POST'])
     def add_search_question():
         body = request.get_json()
-        if not ('searchTerm' in body):# //TODO: Change to GET with arguments
+        if not ('searchTerm' in body):  # //TODO: Change to GET with arguments
             if not ('question' in body and 'answer' in body and 'difficulty' in body and 'category' in body):
                 abort(422)
 
@@ -220,7 +221,7 @@ def create_app(test_config=None):
   '''
 
     @app.route('/quizzes', methods=['POST'])
-    def play_quiz():
+    def fetch_quiz_question():
         try:
             body = request.get_json()
 
@@ -231,14 +232,13 @@ def create_app(test_config=None):
             previous_questions = body.get('previous_questions')
 
             if category['type'] == 'click':
-                available_questions = Question.query.filter(
-                    Question.id.notin_(previous_questions)).all()
+                available_questions = Question.query.filter(Question.id.notin_(previous_questions)).all()
             else:
-                available_questions = Question.query.filter_by(
-                    category=category['id']).filter(Question.id.notin_(previous_questions)).all()
+                available_questions = Question.query.filter(Category.id == category['id'],
+                                                            Question.id.notin_(previous_questions)).all()
 
-            new_question = available_questions[random.randrange(
-                0, len(available_questions))].format() if len(available_questions) > 0 else None
+            random_number = randint(0, len(available_questions) - 1)
+            new_question = available_questions[random_number].format() if len(available_questions) > 0 else None
 
             return jsonify({
                 'success': True,
