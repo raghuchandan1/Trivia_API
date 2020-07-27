@@ -10,6 +10,17 @@ from models import setup_db, Question, Category, db
 QUESTIONS_PER_PAGE = 10
 
 
+def paginate_questions(request, selection):
+    page = request.args.get('page', 1, type=int)
+    start = (page - 1) * QUESTIONS_PER_PAGE
+    end = start + QUESTIONS_PER_PAGE
+
+    questions = [question.format() for question in selection]
+    current_questions = questions[start:end]
+
+    return current_questions
+
+
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
@@ -39,13 +50,18 @@ def create_app(test_config=None):
     def fetch_categories():
         categories = Category.query.order_by(Category.type).all()
         # formatted_categories = [category.format() for category in categories]
-        if len(categories) == 0:
+        categories_dict = {}
+        for category in categories:
+            categories_dict[category.id] = category.type
+
+        # abort if no categories
+        if len(categories_dict) == 0:
             abort(404)
 
+        # return category data to view
         return jsonify({
             'success': True,
-            'categories': {category.id: category.type for category in categories}
-            # 'categories': formatted_categories
+            'categories': categories_dict
         })
 
     '''
@@ -60,16 +76,6 @@ def create_app(test_config=None):
   ten questions per page and pagination at the bottom of the screen for three pages.
   Clicking on the page numbers should update the questions. 
   '''
-
-    def paginate_questions(request, selection):
-        page = request.args.get('page', 1, type=int)
-        start = (page - 1) * QUESTIONS_PER_PAGE
-        end = start + QUESTIONS_PER_PAGE
-
-        questions = [question.format() for question in selection]
-        current_questions = questions[start:end]
-
-        return current_questions
 
     @app.route('/questions')
     def fetch_questions():
@@ -135,18 +141,25 @@ def create_app(test_config=None):
             new_difficulty = body.get('difficulty')
             new_category = body.get('category')
 
+            if ((new_question is None) or (new_answer is None) or (new_difficulty is None) or (new_category is None)):
+                abort(422)
+
             try:
                 question = Question(question=new_question, answer=new_answer,
                                     difficulty=new_difficulty, category=new_category)
                 question.insert()
+                selection = Question.query.order_by(Question.id).all()
+                current_questions = paginate_questions(request, selection)
 
                 return jsonify({
                     'success': True,
-                    'created': question.id
+                    'created': question.id,
+                    'questions': current_questions,
+                    'total_questions': len(Question.query.all())
                 })
-
             except:
                 abort(422)
+
         searchTerm = body.get('searchTerm')
         selection = Question.query.filter(Question.question.ilike('%{}%'.format(searchTerm))).all()
         current_questions = paginate_questions(request, selection)
@@ -248,7 +261,7 @@ def create_app(test_config=None):
             abort(422)
 
     '''
-  @TODO: 
+  @DONE: 
   Create error handlers for all expected errors 
   including 404 and 422. 
   '''
